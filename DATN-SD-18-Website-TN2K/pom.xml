@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.poly.datn.sd10</groupId>
-	<artifactId>DATN-SD-18-Website-TN2K</artifactId>
+	<artifactId>DATN-SD-10-Website-TN2K</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>DATN-SD-18-Website-TN2K</name>
+	<name>DATN-SD-10-Website-TN2K</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
