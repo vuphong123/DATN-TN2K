@@ -1,0 +1,36 @@
+/* Bố trí và kiểu cho bảng sản phẩm */
+.san-pham {
+    height: 50%; /* Chiếm nửa dưới của khung bên trái */
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.san-pham h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.san-pham table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.san-pham th, .san-pham td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.san-pham th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.san-pham tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.san-pham tr:hover {
+    background-color: #ddd;
+}

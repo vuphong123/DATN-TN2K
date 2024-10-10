@@ -1,0 +1,104 @@
+/* Thiết lập cơ bản cho body */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* Container tổng để chứa các bảng */
+.container {
+    display: flex; /* Sử dụng flexbox để chia đôi */
+    height: 100vh; /* Chiều cao toàn trang */
+}
+
+/* Bố cục cho phần bên trái (chia làm 2) */
+.left-container {
+    display: flex;
+    flex-direction: column; /* Đặt các bảng theo chiều dọc */
+    width: 60%; /* Chiếm nửa chiều rộng */
+}
+
+.hoa-don-cho {
+    flex: 1; /* Chiếm toàn bộ chiều cao còn lại */
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Đổ bóng cho bảng */
+}
+
+/* Bố cục cho bảng sản phẩm (phía dưới) */
+.san-pham {
+    flex: 1; /* Chiếm toàn bộ chiều cao còn lại */
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Đổ bóng cho bảng */
+}
+
+/* Bố cục cho bảng chi tiết hóa đơn (bên phải) */
+.chi-tiet-hoa-don {
+    width: 50%; /* Chiếm nửa chiều rộng còn lại */
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Đổ bóng cho bảng */
+}
+
+/* Các kiểu cho tiêu đề bảng */
+h2 {
+    font-size: 20px;
+    color: #333; /* Màu chữ */
+    border-bottom: 2px solid #ccc; /* Đường kẻ dưới tiêu đề */
+    padding-bottom: 5px; /* Khoảng cách dưới tiêu đề */
+}
+
+/* Bố cục cho bảng */
+table {
+    width: 100%;
+    border-collapse: collapse; /* Gộp đường biên */
+    margin-top: 0;
+}
+
+/* Định dạng cho ô tiêu đề và ô dữ liệu */
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px; /* Khoảng cách trong ô */
+    text-align: left;
+}
+
+/* Kiểu cho ô tiêu đề */
+th {
+    background-color: #f2f2f2; /* Màu nền cho tiêu đề */
+    font-weight: bold; /* Chữ đậm */
+}
+
+/* Kiểu cho hàng chẵn */
+tr:nth-child(even) {
+    background-color: #f9f9f9; /* Màu nền cho hàng chẵn */
+}
+
+/* Kiểu cho hàng khi hover */
+tr:hover {
+    background-color: #ddd; /* Màu nền khi hover */
+}
+
+/* Nút tạo hóa đơn */
+button {
+    padding: 10px 20px; /* Khoảng cách trong nút */
+    margin-top: 10px; /* Khoảng cách trên nút */
+    background-color: #4CAF50; /* Màu nền nút */
+    color: white; /* Màu chữ nút */
+    border: none; /* Không có viền */
+    cursor: pointer; /* Con trỏ khi hover */
+    border-radius: 5px; /* Bo tròn các góc nút */
+    transition: background-color 0.3s; /* Hiệu ứng chuyển màu */
+}
+
+/* Hiệu ứng hover cho nút */
+button:hover {
+    background-color: #45a049; /* Màu nền khi hover */
+}
+
+/* Định dạng cho ô chọn */
+select {
+    padding: 10px;
+    width: 100%; /* Chiều rộng đầy đủ */
+    margin-top: 10px; /* Khoảng cách trên */
+}
+.wrapper {
+    display: flex; /* Sử dụng flexbox để bố trí sidebar và content */
+}
+
