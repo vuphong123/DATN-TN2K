@@ -57,17 +57,6 @@ CREATE TABLE user_roles (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (role_id) REFERENCES roles(role_id) ON DELETE CASCADE
 );
-
---Bảng sản phẩm
-CREATE TABLE products (
-    product_id      INT IDENTITY(1,1) PRIMARY KEY,   -- Khóa chính, tự động tăng
-    name            NVARCHAR(255) NOT NULL,          -- Tên sản phẩm
-    description     NVARCHAR(MAX),                   -- Mô tả chi tiết sản phẩm
-    stock_quantity  INT DEFAULT 0,                   -- Số lượng còn lại trong kho
-    created_at      DATETIME DEFAULT GETDATE(),      -- Ngày tạo sản phẩm
-    updated_at      DATETIME DEFAULT GETDATE()       -- Ngày cập nhật sản phẩm
-);
-
 -- Bảng color (màu sắc sản phẩm)
 CREATE TABLE colors (
     color_id        INT IDENTITY(1,1) PRIMARY KEY,   -- Khóa chính, tự động tăng
@@ -117,9 +106,11 @@ CREATE TABLE categories (
 );
 
 --Bảng sản phẩm chi tiết
-CREATE TABLE product_details (
-    detail_id       INT IDENTITY(1,1) PRIMARY KEY,   -- Khóa chính, tự động tăng
-    product_id      INT NULL,                        -- Khóa ngoại tới bảng products
+CREATE TABLE product (
+    product_id      INT IDENTITY(1,1) PRIMARY KEY,   -- Khóa chính, tự động tăng
+    name            NVARCHAR(255) NOT NULL,          -- Tên sản phẩm
+    description     NVARCHAR(MAX),                   -- Mô tả chi tiết sản phẩm
+    stock_quantity  INT DEFAULT 0,                   -- Số lượng còn lại trong kho
     size_id         INT NULL,                        -- Kích cỡ (S, M, L, XL)
     color_id        INT NULL,                        -- Màu sắc
     material_id     INT NULL,                        -- Chất liệu (cotton, len, ...)
@@ -131,7 +122,6 @@ CREATE TABLE product_details (
     additional_info NVARCHAR(MAX),                   -- Các thông tin bổ sung khác
 	created_at      DATETIME DEFAULT GETDATE(),      -- Ngày tạo
     updated_at      DATETIME DEFAULT GETDATE(),      -- Ngày cập nhật
-    FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE,
 	FOREIGN KEY (color_id) REFERENCES colors(color_id) ON DELETE SET NULL,
     FOREIGN KEY (size_id) REFERENCES sizes(size_id) ON DELETE SET NULL,
     FOREIGN KEY (origin_id) REFERENCES origins(origin_id) ON DELETE SET NULL,
@@ -143,12 +133,12 @@ CREATE TABLE product_details (
 --Bảng ảnh sản phẩm
 CREATE TABLE images (
     image_id        INT IDENTITY(1,1) PRIMARY KEY,   -- Khóa chính, tự động tăng
-    detail_id       INT NULL,                        -- Khóa ngoại tới bảng product_details
+    product_id       INT NULL,                        -- Khóa ngoại tới bảng product_details
     image_url       NVARCHAR(255),                   -- URL hình ảnh
     is_main         BIT DEFAULT 0,                   -- Ảnh chính của sản phẩm (0 hoặc 1)
 	created_at      DATETIME DEFAULT GETDATE(),      -- Ngày tạo
     updated_at      DATETIME DEFAULT GETDATE(),      -- Ngày cập nhật
-    FOREIGN KEY (detail_id ) REFERENCES product_details(detail_id) ON DELETE CASCADE
+    FOREIGN KEY (product_id ) REFERENCES product(product_id) ON DELETE CASCADE
 );
 
 -- Bảng payment_methods (phương thức thanh toán)
@@ -184,13 +174,13 @@ CREATE TABLE orders (
 CREATE TABLE order_items (
     order_item_id   INT IDENTITY(1,1) PRIMARY KEY,   -- Khóa chính, tự động tăng
     order_id        INT NOT NULL,                    -- Khóa ngoại tới bảng orders
-    detail_id       INT NOT NULL,                    -- Khóa ngoại tới bảng product_details
+    product_id       INT NOT NULL,                    -- Khóa ngoại tới bảng product_details
     quantity        INT NOT NULL,                    -- Số lượng sản phẩm
     price           DECIMAL(10, 2) NOT NULL,         -- Giá sản phẩm tại thời điểm mua
 	created_at      DATETIME DEFAULT GETDATE(),      -- Ngày tạo
     updated_at      DATETIME DEFAULT GETDATE(),      -- Ngày cập nhật
     FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE,
-    FOREIGN KEY (detail_id) REFERENCES product_details(detail_id) ON DELETE CASCADE
+    FOREIGN KEY (product_id) REFERENCES product(product_id) ON DELETE CASCADE
 );
 
 --Bảng lịch sử hóa đơn
@@ -219,11 +209,11 @@ CREATE TABLE promotions (
 -- Bảng product_promotions (Liên kết giữa sản phẩm và khuyến mãi)
 CREATE TABLE product_promotions (
     product_promotion_id INT IDENTITY(1,1) PRIMARY KEY,  -- Khóa chính, tự động tăng
-    detail_id            INT NOT NULL,                   -- Khóa ngoại tới bảng product_details
+    product_id            INT NOT NULL,                   -- Khóa ngoại tới bảng product_details
     promotion_id         INT NOT NULL,                   -- Khóa ngoại tới bảng promotions
 	created_at      DATETIME DEFAULT GETDATE(),      -- Ngày tạo
     updated_at      DATETIME DEFAULT GETDATE(),      -- Ngày cập nhật
-    FOREIGN KEY (detail_id) REFERENCES product_details(detail_id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES product(product_id) ON DELETE CASCADE,
     FOREIGN KEY (promotion_id) REFERENCES promotions(promotion_id) ON DELETE CASCADE
 );
 
@@ -231,179 +221,175 @@ CREATE TABLE product_promotions (
 CREATE TABLE cart (
 	cart_id		INT IDENTITY(1,1) PRIMARY KEY,		   -- Khóa chính, tự động tăng
 	user_id		INT NOT NULL,						   -- Khóa ngoại tới bảng users
-	product_detail_id INT NULL,						   -- Khóa ngoại tới bảng product_details
+	product_id INT NULL,						   -- Khóa ngoại tới bảng product_details
 	created_at      DATETIME DEFAULT GETDATE(),        -- Ngày tạo
     updated_at      DATETIME DEFAULT GETDATE(),        -- Ngày cập nhật
 	FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
-	FOREIGN KEY (product_detail_id) REFERENCES product_details(detail_id) ON DELETE CASCADE,
+	FOREIGN KEY (product_id) REFERENCES product(product_id) ON DELETE CASCADE,
 )
 
 --Thêm dữ liệu vào bảng users
-INSERT INTO users (username, password_hash, email, full_name, phone_number, avatar, gender, birth_date, identity_card, status)
+INSERT INTO users (username, password_hash, email, full_name, phone_number, avatar, gender, birth_date, identity_card, status) 
 VALUES 
-('user1', 'hashed_password1', 'user1@example.com', 'Nguyen Van A', '0123456789', 'avatar1.png', 'Nam', '1990-01-01', 123456789, 'active'),
-('user2', 'hashed_password2', 'user2@example.com', 'Tran Thi B', '0987654321', 'avatar2.png', 'Nu', '1992-02-02', 987654321, 'active'),
-('user3', 'hashed_password3', 'user3@example.com', 'Le Van C', '0345678901', 'avatar3.png', 'Nam', '1994-03-03', 192837465, 'active'),
-('user4', 'hashed_password4', 'user4@example.com', 'Pham Thi D', '0456789012', 'avatar4.png', 'Nu', '1988-04-04', 564738291, 'inactive'),
-('user5', 'hashed_password5', 'user5@example.com', 'Vo Van E', '0567890123', 'avatar5.png', 'Nam', '1985-05-05', 384756192, 'active');
+('user1', 'password1', 'user1@example.com', 'Nguyen Van A', '0912345678', 'avatar1.jpg', 'Male', '1990-01-01', 123456789, 'Active'),
+('user2', 'password2', 'user2@example.com', 'Tran Thi B', '0912345679', 'avatar2.jpg', 'Female', '1992-02-02', 234567890, 'Active'),
+('user3', 'password3', 'user3@example.com', 'Le Van C', '0912345680', 'avatar3.jpg', 'Male', '1994-03-03', 345678901, 'Inactive'),
+('user4', 'password4', 'user4@example.com', 'Pham Thi D', '0912345681', 'avatar4.jpg', 'Female', '1996-04-04', 456789012, 'Active'),
+('user5', 'password5', 'user5@example.com', 'Hoang Van E', '0912345682', 'avatar5.jpg', 'Male', '1998-05-05', 567890123, 'Active');
 
 --Thêm dữ liệu vào bảng address
-INSERT INTO address (user_id, address, address_detail)
+INSERT INTO address (user_id, address, address_detail) 
 VALUES 
-(1, 'Hanoi', '123 Street Name, District 1'),
-(2, 'Ho Chi Minh City', '456 Avenue Name, District 2'),
-(3, 'Da Nang', '789 Boulevard Name, District 3'),
-(4, 'Hai Phong', '321 Road Name, District 4'),
-(5, 'Nha Trang', '654 Lane Name, District 5');
+(1, '123 Main St', 'Apartment 1A'), 
+(2, '456 Oak St', 'Suite B'), 
+(3, '789 Pine St', 'Floor 2'), 
+(4, '321 Maple St', 'House 3'), 
+(5, '654 Elm St', 'Room 4C');
 
 --Thêm dữ liệu vào bảng role
-INSERT INTO roles (role_name)
+INSERT INTO roles (role_name) 
 VALUES 
-('admin'),
-('customer'),
-('manager'),
-('editor'),
-('support');
+('Admin'), 
+('Customer'), 
+('Manager'), 
+('Seller'), 
+('Moderator');
 
 --Thêm dữ liệu vào bảng user_roles
-INSERT INTO user_roles (user_id, role_id)
+INSERT INTO user_roles (user_id, role_id) 
 VALUES 
-(1, 1),  -- user1 là admin
-(2, 2),  -- user2 là customer
-(3, 1),  -- user3 là admin
-(4, 3),  -- user4 là manager
-(5, 2);  -- user5 là customer
-
---Thêm dữ liệu vào bảng products
-INSERT INTO products (name, description, stock_quantity)
-VALUES 
-('Áo thun nam cổ tròn', 'Áo thun cotton mềm mại, thoáng mát, thích hợp cho mùa hè.', 100),
-('Áo sơ mi nam', 'Áo sơ mi dài tay, chất liệu vải cotton, phù hợp cho công sở.', 50),
-('Áo khoác nam', 'Áo khoác gió chống nước, thích hợp cho mùa đông.', 30),
-('Áo polo nam', 'Áo polo cổ bẻ, thiết kế trẻ trung, dễ phối đồ.', 75),
-('Áo hoodie nam', 'Áo hoodie ấm áp, có mũ, phù hợp cho thời tiết lạnh.', 20);
+(1, 1), 
+(2, 2), 
+(3, 3), 
+(4, 4), 
+(5, 5);
 
 --Thêm dữ liệu vào bảng colors
-INSERT INTO colors (color_name) VALUES 
-('Đỏ'),
-('Xanh'),
-('Đen'),
-('Trắng'),
-('Vàng');
+INSERT INTO colors (color_name) 
+VALUES 
+('Red'), 
+('Blue'), 
+('Green'), 
+('Black'), 
+('White');
 
 --Thêm dữ liệu vào bảng sizes
-INSERT INTO sizes (size_name) VALUES 
-('S'),
-('M'),
-('L'),
-('XL'),
+INSERT INTO sizes (size_name) 
+VALUES 
+('S'), 
+('M'), 
+('L'), 
+('XL'), 
 ('XXL');
 
 --Thêm dữ liệu vào bảng origins
-INSERT INTO origins (origin_name) VALUES 
-('Việt Nam'),
-('Trung Quốc'),
-('Mỹ'),
-('Nhật Bản'),
-('Ấn Độ');
+INSERT INTO origins (origin_name) 
+VALUES 
+('Vietnam'), 
+('China'), 
+('USA'), 
+('Japan'), 
+('Korea');
 
 --Thêm dữ liệu vào bảng materials
-INSERT INTO materials (material_name) VALUES 
-('Cotton'),
-('Polyester'),
-('Len'),
-('Vải thun'),
-('Da');
+INSERT INTO materials (material_name) 
+VALUES 
+('Cotton'), 
+('Polyester'), 
+('Wool'), 
+('Silk'), 
+('Leather');
 
 --Thêm dữ liệu vào bảng patterns
-INSERT INTO patterns (pattern_name) VALUES 
-('Trơn'),
-('Sọc'),
-('In hình'),
-('Kiểu dáng đặc biệt'),
-('Chấm bi');
+INSERT INTO patterns (pattern_name) 
+VALUES 
+('Solid'), 
+('Striped'), 
+('Printed'), 
+('Checkered'), 
+('Polka Dot');
 
 --Thêm dữ liệu vào bảng categories
-INSERT INTO categories (category_name) VALUES 
-('Áo thun'),
-('Áo sơ mi'),
-('Áo khoác'),
-('Quần'),
-('Giày dép');
-
---product_details
-INSERT INTO product_details (product_id, size_id, color_id, material_id, pattern_id, origin_id, categories_id, price, weigh, additional_info)
+INSERT INTO categories (category_name) 
 VALUES 
-(1, 1, 1, 1, 1, 1, 1, 300.00, 0.5, 'Áo thun nam cotton, màu đỏ, size M'),
-(2, 2, 2, 2, 2, 1, 1, 450.00, 0.6, 'Áo sơ mi nam linen, màu xanh, size L'),
-(3, 1, 3, 1, 3, 2, 1, 600.00, 0.7, 'Áo khoác nam polyester, màu đen, size S'),
-(4, 3, 1, 2, 1, 1, 1, 400.00, 0.4, 'Áo polo nam cotton, màu trắng, size XL'),
-(5, 2, 2, 1, 2, 3, 1, 550.00, 0.5, 'Áo hoodie nam, màu xanh dương, size M');
+('T-shirt'), 
+('Shirt'), 
+('Jacket'), 
+('Jeans'), 
+('Dress');
+
+--product
+INSERT INTO product (name, description, stock_quantity, size_id, color_id, material_id, pattern_id, origin_id, categories_id, price, weigh, additional_info) 
+VALUES 
+('T-shirt 1', 'Comfortable cotton T-shirt', 100, 1, 1, 1, 1, 1, 1, 150000, 0.5, 'No additional info'),
+('T-shirt 2', 'Stylish polyester T-shirt', 200, 2, 2, 2, 2, 2, 2, 200000, 0.4, 'Limited edition'),
+('Shirt 1', 'Formal cotton shirt', 50, 3, 3, 1, 3, 3, 3, 300000, 0.6, 'Best for office wear'),
+('Jacket 1', 'Winter wool jacket', 30, 4, 4, 3, 4, 4, 4, 500000, 1.2, 'Keep you warm'),
+('Dress 1', 'Elegant silk dress', 20, 5, 5, 4, 5, 5, 5, 1000000, 0.8, 'Perfect for parties');
 
 --payment_methods
-INSERT INTO payment_methods (method_name)
+INSERT INTO payment_methods (method_name) 
 VALUES 
-('Tiền mặt'),
-('Thẻ tín dụng'),
-('Thẻ ghi nợ'),
-('Ví điện tử'),
-('Chuyển khoản ngân hàng');
+('Cash'), 
+('Credit Card'), 
+('Debit Card'), 
+('E-wallet'), 
+('Bank Transfer');
 
 -- orders
-INSERT INTO orders (user_id, payment_method_id, code, total_amount, status, ship_fee, note, created_by)
+INSERT INTO orders (user_id, payment_method_id, code, total_amount, status, ship_fee, note, created_by, update_by) 
 VALUES 
-(1, 1, 'HD001', 500.00, 'Đang xử lý', 20.00, 'Ghi chú đơn hàng 1', 'Admin'),
-(2, 2, 'HD002', 1000.00, 'Đã giao hàng', 15.00, 'Ghi chú đơn hàng 2', 'Admin'),
-(3, 3, 'HD003', 750.00, 'Đang xử lý', 25.00, 'Ghi chú đơn hàng 3', 'Admin'),
-(1, 4, 'HD004', 300.00, 'Đang xử lý', 10.00, 'Ghi chú đơn hàng 4', 'Admin'),
-(2, 5, 'HD005', 850.00, 'Đã giao hàng', 5.00, 'Ghi chú đơn hàng 5', 'Admin');
+(1, 1, 'ORD001', 500000, 'Processing', 50000, 'Handle with care', 'Admin', 'Admin'), 
+(2, 2, 'ORD002', 1000000, 'Shipped', 60000, 'Fast shipping', 'Admin', 'Admin'), 
+(3, 3, 'ORD003', 1500000, 'Delivered', 70000, 'No special request', 'Admin', 'Admin'), 
+(4, 4, 'ORD004', 2000000, 'Cancelled', 80000, 'Customer request', 'Admin', 'Admin'), 
+(5, 5, 'ORD005', 2500000, 'Processing', 90000, 'Urgent', 'Admin', 'Admin');
 
 -- order_items
-INSERT INTO order_items (order_id, detail_id, quantity, price)
+INSERT INTO order_items (order_id, product_id, quantity, price) 
 VALUES 
-(1, 1, 2, 150.00),  -- 2 áo thun
-(1, 2, 1, 350.00),  -- 1 áo sơ mi
-(2, 3, 1, 500.00),  -- 1 áo khoác
-(3, 4, 1, 1200.00), -- 1 áo polo
-(4, 5, 3, 250.00);  -- 3 áo hoodie
+(1, 1, 2, 150000), 
+(2, 2, 1, 200000), 
+(3, 3, 3, 300000), 
+(4, 4, 1, 500000), 
+(5, 5, 1, 1000000);
 
 -- history_order
-INSERT INTO history_order (order_id, action)
+INSERT INTO history_order (order_id, action) 
 VALUES 
-(1, 'Đặt hàng'),
-(1, 'Đã thanh toán'),
-(1, 'Đang xử lý'),
-(2, 'Đã giao hàng'),
-(3, 'Hủy đơn');
+(1, 'Order created'), 
+(2, 'Order shipped'), 
+(3, 'Order delivered'), 
+(4, 'Order cancelled'), 
+(5, 'Order created');
 
 -- promotions
-INSERT INTO promotions (promotion_name, discount_type, discount_value, start_date, end_date, status)
+INSERT INTO promotions (promotion_name, discount_type, discount_value, start_date, end_date, status) 
 VALUES 
-('Khuyến mãi mùa hè', 'Phần trăm', 20.00, '2024-06-01', '2024-06-30', 1),
-('Giảm giá cuối năm', 'Số tiền', 50.00, '2024-12-01', '2024-12-31', 1),
-('Mua 1 tặng 1', 'Phần trăm', 100.00, '2024-05-01', '2024-05-15', 1),
-('Giảm giá cho đơn hàng đầu tiên', 'Phần trăm', 15.00, '2024-01-01', '2024-12-31', 1),
-('Khuyến mãi sinh nhật', 'Số tiền', 30.00, '2024-09-01', '2024-09-30', 1);
+('Summer Sale', 'Percentage', 10.00, '2024-06-01', '2024-06-30', 1), 
+('Winter Sale', 'Fixed', 50000.00, '2024-12-01', '2024-12-31', 1), 
+('Black Friday', 'Percentage', 20.00, '2024-11-25', '2024-11-30', 1), 
+('New Year Sale', 'Fixed', 100000.00, '2024-01-01', '2024-01-07', 1), 
+('Clearance Sale', 'Percentage', 30.00, '2024-09-01', '2024-09-15', 1);
 
 -- product_promotions
-INSERT INTO product_promotions (detail_id, promotion_id)
+INSERT INTO product_promotions (product_id, promotion_id) 
 VALUES 
-(1, 1),  -- Áo thun nam áp dụng khuyến mãi mùa hè
-(2, 2),  -- Áo sơ mi nam áp dụng giảm giá cuối năm
-(3, 3),  -- Áo khoác nam áp dụng chương trình mua 1 tặng 1
-(4, 4),  -- Áo polo nam áp dụng khuyến mãi cho đơn hàng đầu tiên
-(5, 5);  -- Áo hoodie nam áp dụng khuyến mãi sinh nhật
-
-INSERT INTO cart (user_id, product_detail_id)
-VALUES 
-(1, 1),
-(1, 2),
-(2, 2),
-(3, 3),
-(4, 4),
+(1, 1), 
+(2, 2), 
+(3, 3), 
+(4, 4), 
 (5, 5);
 
+INSERT INTO cart (user_id, product_id) 
+VALUES 
+(1, 1), 
+(2, 2), 
+(3, 3), 
+(4, 4), 
+(5, 5);
+
+
 select * from cart
-select * from product_details
 
 --delete product_details where detail_id=1
