@@ -21,8 +21,4 @@ public class MainController {
     public String showIndexPage(Model model) {
         return "/admin/order/index"; // Điều này sẽ load file index.jsp trong thư mục views
     }
-    @GetMapping("/product")
-    public String showproductPage(Model model) {
-        return "/admin/product/products"; // Điều này sẽ load file index.jsp trong thư mục views
-    }
     }

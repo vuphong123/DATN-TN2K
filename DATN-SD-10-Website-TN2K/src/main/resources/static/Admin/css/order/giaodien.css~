@@ -1,0 +1,295 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+}
+
+#container {
+    width: 80%;
+    margin: 20px 10px 10px 17% ;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2, h3 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 28px;
+    color:#00bfff;
+}
+
+h3 {
+    font-size: 22px;
+    color: #2F4F4F;
+}
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background-color: #fff;
+}
+
+th, td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background-color: #00bfff;
+    color: white;
+    font-weight: bold;
+}
+
+td {
+    background-color: #f9f9f9;
+}
+
+
+#product-search {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+
+button {
+    padding: 10px 20px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+.btn-delete-invoice, .btn-delete-product {
+    background-color: #FF4500;
+}
+.btn-delete-invoice:hover, .btn-delete-product:hover {
+    background-color: #40E0D0;
+}
+.btn-choose-invoice, #create-invoice, #btn-choose-product {
+    background-color: #32CD32;
+}
+.btn-choose-invoice:hover, #create-invoice:hover, #btn-choose-product:hover {
+    background-color: #40E0D0;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-table {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    width: 50%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: center;
+    
+}
+
+.hidden {
+    display: none;
+}
+
+.modal h3 {
+    margin-bottom: 20px;
+    font-size: 22px;
+    color: #333;
+}
+
+.modal table {
+    margin-top: 10px;
+}
+
+.modal button {
+    margin-top: 20px;
+    background-color: #32CD32;
+}
+#btn-close-salesperson-modal{
+    background-color: #FF6347;
+}
+#btn-close-salesperson-modal:hover{
+    background-color: #40E0D0;
+}
+.modal button:hover {
+    background-color: #40E0D0;
+}
+
+
+.invoice-summary {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f2f2f2;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.invoice-summary div {
+    margin-bottom: 10px;
+}
+
+.invoice-summary strong {
+    display: inline-block;
+    width: 200px;
+    color: #333;
+}
+.summary-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.summary-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.summary-row label {
+    flex: 1;
+    font-weight: bold;
+    color: #333;
+}
+.total-price, .return-money, .remaining-money{
+    margin-left: 79%;
+}
+#order-note{
+    width: 70%;
+}
+#payment-method{
+    width: 35%;
+}
+.summary-row input {
+    flex: 2;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+}
+
+.summary-row button {
+    width: 150px;
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.summary-row button:hover {
+    background-color: #FFA07A;
+}
+
+.summary-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    color: #333;
+}
+
+#total-before-discount, #total-after-discount {
+    color: #FF6347;
+}
+
+
+@media screen and (max-width: 768px) {
+    .modal-content {
+        width: 90%;
+    }
+
+    th, td {
+        padding: 8px 10px;
+    }
+
+    button {
+        font-size: 14px;
+        padding: 8px 14px;
+    }
+}
+
+.invoice-detail {
+    height: 400px;
+    border-color: #dddddd;
+}
+
+
+#product-search {
+    font-size: 16px;
+    border: 1px solid #ddd;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    padding: 10px;
+    width: calc(100% - 20px);
+}
+
+.product-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.product-list-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+
+.btn-add-product, .btn-add-customer, .btn-add-promo , #save-order-btn{
+    background-color: #4CAF50;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-add-product:hover, .btn-add-customer:hover, .btn-add-promo:hover , #save-order-btn:hover{
+    background-color: #40E0D0; /
+}
+
+
+#btn-close-product-modal, #btn-close-customer-modal, #btn-close-promo-modal {
+    background-color: #FF6347;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#btn-close-product-modal:hover, #btn-close-customer-modal:hover, #btn-close-promo-modal:hover {
+    background-color: #40E0D0;
+}
+
+.wrapper {
+    display: flex;
+}
+
